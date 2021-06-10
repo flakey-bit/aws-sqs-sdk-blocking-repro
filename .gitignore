@@ -1,0 +1,5 @@
+.idea
+/client/obj
+/client/bin
+/server/bin
+/server/obj
