@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Amazon.SQS;
+using Amazon.SQS.Model;
 
 namespace client
 {
@@ -10,23 +12,35 @@ namespace client
         static async Task Main(string[] args)
         {
             const string url = "http://localhost:5000/";
-            var client = new HttpClient()
-            {
-                Timeout = TimeSpan.FromSeconds(5)
-            };
+            // var client = new HttpClient()
+            // {
+            //     Timeout = TimeSpan.FromSeconds(5)
+            // };
+            //
+            // var request = new HttpRequestMessage
+            // {
+            //     Method = HttpMethod.Post,
+            //     RequestUri = new Uri(url)
+            // };
 
-            var request = new HttpRequestMessage
+            var client = new AmazonSQSClient(new AmazonSQSConfig
             {
-                Method = HttpMethod.Post,
-                RequestUri = new Uri(url)
+                ServiceURL = url,
+                Timeout = TimeSpan.FromSeconds(5),
+                UseHttp = true,
+                MaxErrorRetry = 0
+            });
+
+            var request = new ReceiveMessageRequest()
+            {
+                WaitTimeSeconds = 10,
+
             };
 
             var sw = Stopwatch.StartNew();
-            var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
-            Console.Out.WriteLine($"{sw.Elapsed} Got headers: \n{response.Headers}");
+            var response = await client.ReceiveMessageAsync(request);
 
-            var body = await response.Content.ReadAsStringAsync();
-            Console.Out.WriteLine($"{sw.Elapsed} Got body: \n{body}");
+            Console.Out.WriteLine($"{sw.Elapsed} Got messages: \n{response.Messages.Count}");
         }
     }
 }

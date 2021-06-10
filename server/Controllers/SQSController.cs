@@ -16,7 +16,7 @@ namespace server.Controllers
         }
 
         [HttpPost]
-        public async Task<EmptyResult> Post()
+        public async Task<EmptyResult> Post([FromForm]string action, [FromForm]string waitTimeSeconds, [FromForm]string version)
         {
             Response.ContentType = "text/xml";
             string xml = "<ReceiveMessageResponse>\n  <ReceiveMessageResult />\n  <ResponseMetadata>\n    <RequestId>b6633655-283d-45b4-aee4-4e84e0ae6afa</RequestId>\n  </ResponseMetadata>\n</ReceiveMessageResponse>";
