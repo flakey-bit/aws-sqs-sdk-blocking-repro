@@ -25,9 +25,10 @@ namespace server.Controllers
             Response.Headers.ContentLength = bytes.Length;
             await Response.Body.FlushAsync();
 
-            await Task.Delay(TimeSpan.FromSeconds(5));
-            await new MemoryStream(bytes).CopyToAsync(Response.Body);
-            return new EmptyResult();
+            while (true) ;
+            //await Task.Delay(TimeSpan.FromSeconds(5));
+            //await new MemoryStream(bytes).CopyToAsync(Response.Body);
+            return new EmptyResult(); // Unreachable
         }
     }
 }
